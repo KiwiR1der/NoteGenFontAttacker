@@ -11,6 +11,12 @@
 * 完全自动化，无需手动 F12
 
 ---
+## 预览
+- Before
+  <img width="1360" height="812" alt="image" src="https://github.com/user-attachments/assets/28dabda1-b45f-470e-913d-e1c9b750d076" />
+
+- After
+  <img width="1360" height="812" alt="image" src="https://github.com/user-attachments/assets/17221073-c66e-462b-8898-72903610971b" />
 
 ## 使用说明
 
