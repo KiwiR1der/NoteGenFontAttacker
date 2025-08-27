@@ -61,7 +61,7 @@ namespace NoteGenFontInjector
             // 6) 准备注入的脚本（全局替换字体）
             string js = @"
 var style=document.createElement('style');
-style.innerHTML='*{font-family:""HarmonyOS Sans SC"",sans-serif!important;}span[data-type=""code""] { font-family: ""JetBrains Mono"", monospace !important; }';
+style.innerHTML='*{font-family:""HarmonyOS Sans SC"",sans-serif!important;}span[data-type=""code""] { font-family: ""JetBrains Maple Mono"", monospace !important; }';
 document.head.appendChild(style);
 ";
             // 也可以更细：只改 body 或特定容器
