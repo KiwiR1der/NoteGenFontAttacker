@@ -1,6 +1,7 @@
 # NoteGenFontAttacker
 
 一个自动化工具，用于在 **NoteGen** 启动时注入自定义字体样式。支持全局字体修改，同时单独替换代码字体。启动时自动打开 DevTools 注入 CSS 并关闭 DevTools，无需手动操作。
+> 特别感谢 [NoteGen](https://notegen.top/cn) 的开发团队为用户提供优秀的笔记体验，本工具仅作为对客户端界面进行个人定制的辅助项目。
 ## 功能特点
 
 * 自动启动 NoteGen 客户端
