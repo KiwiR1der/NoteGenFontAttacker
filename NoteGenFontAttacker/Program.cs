@@ -13,8 +13,10 @@ namespace NoteGenFontInjector
         [STAThread]
         static void Main(string[] args)
         {
+            Console.WriteLine("首次运行需打开控制台（键盘 F12）手动键入 “允许粘贴” 以允许外部 js 粘贴到浏览器中。。。");
+
             // 修改为你的 note-gen.exe 路径
-            string exePath = @"D:\02Applications\NoteGen\note-gen.exe";
+            string exePath = @"D:\04Tools\NoteGen\note-gen.exe";
 
             // 启动进程
             var psi = new ProcessStartInfo(exePath)
@@ -31,21 +33,9 @@ namespace NoteGenFontInjector
 
             // 等待主窗口就绪
             Console.WriteLine("等待窗口");
-            for (int i = 0; i < 60; i++)
-            {
-                p.Refresh();
-                if (p.MainWindowHandle != IntPtr.Zero) break;
-                Thread.Sleep(500);
-            }
-            if (p.MainWindowHandle == IntPtr.Zero)
-            {
-                Console.WriteLine("未发现主窗口句柄，可能是无边框/延迟创建。仍尝试发送按键");
-            }
-            else
-            {
-                ShowWindow(p.MainWindowHandle, SW_RESTORE); // 恢复窗口
-                SetForegroundWindow(p.MainWindowHandle);    // 激活窗口
-            }
+
+            ShowWindow(p.MainWindowHandle, SW_RESTORE); // 恢复窗口
+            SetForegroundWindow(p.MainWindowHandle);    // 激活窗口
 
             // 等待UI完全加载
             Thread.Sleep(2000);
@@ -60,37 +50,26 @@ namespace NoteGenFontInjector
 
             // 6) 准备注入的脚本（全局替换字体）
             string js = @"
-var style=document.createElement('style');
-style.innerHTML='*{font-family:""HarmonyOS Sans SC"",sans-serif!important;}span[data-type=""code""] { font-family: ""JetBrains Maple Mono"", monospace !important; }';
-document.head.appendChild(style);
-";
-            // 也可以更细：只改 body 或特定容器
-            // style.innerHTML='body{font-family:""Microsoft YaHei"",sans-serif!important;}';
+                var style=document.createElement('style');
+                style.innerHTML='*{font-family:""HarmonyOS Sans SC"",sans-serif!important;} span[data-type=""code""] { font-family: ""JetBrains Maple Mono"", monospace !important; }';
+                document.head.appendChild(style);
+            ";
 
             // 7) 放入剪贴板并粘贴执行
             Console.WriteLine("注入 CSS...");
             try
             {
-                // 设置剪贴板（STA 线程要求，Main 默认是 MTA，改为 STA 最简单）
-                // 在 .csproj 里把 <OutputType>Exe</OutputType> 配合 <UseWindowsForms>true</UseWindowsForms> 即可；
-                // 或者把 Main 标记为 [STAThread]
+                Clipboard.SetText(js);
+                SendKeys.SendWait("^v");
+                Thread.Sleep(500);
+                SendKeys.SendWait("{ENTER}");
+
+                // 注入完 CSS 后
+                Console.WriteLine("完成注入，关闭 DevTools...");
+                Thread.Sleep(500);  // 等待渲染完成
+                SendKeys.SendWait("{F12}"); // 再按一次 F12 关闭 DevTools
             }
             catch { }
-
-            Clipboard.SetText(js);
-            SendKeys.SendWait("^v");
-            Thread.Sleep(100);
-            SendKeys.SendWait("{ENTER}");
-
-            //Console.WriteLine("完成。");
-
-            //Console.WriteLine("退出 DevTool");
-            //SendKeys.SendWait("^+I");
-
-            // 注入完 CSS 后
-            Console.WriteLine("完成注入，关闭 DevTools...");
-            Thread.Sleep(500);  // 等待渲染完成
-            SendKeys.SendWait("{F12}"); // 再按一次 F12 关闭 DevTools
         }
     }
 }
